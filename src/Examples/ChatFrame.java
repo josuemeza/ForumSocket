@@ -52,8 +52,6 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
         participantNames = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         userMessages = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        console = new javax.swing.JTextArea();
         sendMessage = new javax.swing.JTextField();
         send = new javax.swing.JButton();
 
@@ -66,9 +64,11 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
         userMessages.setText("Mensajes de usuario.");
         jScrollPane2.setViewportView(userMessages);
 
-        console.setColumns(20);
-        console.setRows(5);
-        jScrollPane3.setViewportView(console);
+        sendMessage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                sendMessageActionPerformed(evt);
+            }
+        });
 
         send.setText("Send");
         send.addActionListener(new java.awt.event.ActionListener() {
@@ -86,13 +86,14 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
                 .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 132, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(jScrollPane3, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
+                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 489, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, layout.createSequentialGroup()
+                        .add(6, 6, 6)
                         .add(sendMessage)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(send))
-                    .add(jScrollPane2))
-                .addContainerGap())
+                        .add(send))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
@@ -100,21 +101,19 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(layout.createSequentialGroup()
-                        .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 239, Short.MAX_VALUE)
+                        .add(jScrollPane2)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                         .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
-                            .add(sendMessage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                            .add(send))
-                        .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(jScrollPane3, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
-                    .add(jScrollPane1))
+                            .add(send)
+                            .add(sendMessage, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)))
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 365, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+    private void sendMessage() {
         try {
             this.channel.sendMessage(this, this.sendMessage.getText());
             this.sendMessage.setText("");
@@ -123,7 +122,15 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
         } catch (IOException ex) {
             Logger.getLogger(ChatFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
+        this.sendMessage();
     }//GEN-LAST:event_sendActionPerformed
+
+    private void sendMessageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendMessageActionPerformed
+        this.sendMessage();
+    }//GEN-LAST:event_sendMessageActionPerformed
 
     /**
      * @param args the command line arguments
@@ -172,10 +179,8 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextArea console;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JList participantNames;
     private javax.swing.JButton send;
     private javax.swing.JTextField sendMessage;
