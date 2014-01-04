@@ -11,6 +11,7 @@ import Model.Moderator;
 import Model.Participant;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
@@ -25,7 +26,7 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
     private String name;
     private Channel channel;
     private DefaultListModel model;
-    
+
     /**
      * Creates new form ChatFrame
      */
@@ -36,6 +37,7 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
         this.channel.addModerator(this);
         this.channel.joinGroup(this);
         initComponents();
+        this.setTitle(name);
         this.participantNames.setModel(model);
     }
 
@@ -115,7 +117,24 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
 
     private void sendMessage() {
         try {
-            this.channel.sendMessage(this, this.sendMessage.getText());
+            Object[] destination = this.participantNames.getSelectedValues();
+            LinkedList<String> destinationNames = new LinkedList<String>();
+            if (destination.length > 0) {
+                for (Object o : destination) {
+                    String str = (String) o;
+                    if (str.equals(this.name)) {
+                        continue;
+                    }
+                    destinationNames.add(str);
+                }
+            }
+            if (destinationNames.size() > 0) {
+                // Multiple
+                this.channel.sendMessage(this, destinationNames, this.sendMessage.getText());
+            } else {
+                // Single
+                this.channel.sendMessage(this, this.sendMessage.getText());
+            }
             this.sendMessage.setText("");
         } catch (ChannelException ex) {
             Logger.getLogger(ChatFrame.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,7 +142,7 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
             Logger.getLogger(ChatFrame.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void sendActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sendActionPerformed
         this.sendMessage();
     }//GEN-LAST:event_sendActionPerformed
@@ -199,7 +218,7 @@ public class ChatFrame extends javax.swing.JFrame implements Moderator, Particip
 
     @Override
     public void recieveMessage(ForumMessage message) {
-        this.userMessages.setText(this.userMessages.getText() + "\n" + message.getSenderName() + ": " + (String)message.getMessage());
+        this.userMessages.setText(this.userMessages.getText() + "\n" + message.getSenderName() + ": " + (String) message.getMessage());
     }
 
     @Override
